@@ -35,7 +35,7 @@
             try {
                 const profile = await liff.getProfile();
                 const userId = profile.userId;
-                const response = await fetch('hhttps://script.google.com/macros/s/AKfycbzjjENYn2gRE0l6-a21urIT_xC3w7Fm1LJlUnVq7G9xZLoCWNXjaqq7AjW6cqfwabHz/exec?user_id=' + userId);  // ご自身のGAS WebアプリのURLに置き換えてください
+                const response = await fetch('https://script.google.com/macros/s/AKfycbzjjENYn2gRE0l6-a21urIT_xC3w7Fm1LJlUnVq7G9xZLoCWNXjaqq7AjW6cqfwabHz/exec?user_id=' + userId);  // ご自身のGAS WebアプリのURLに置き換えてください
                 const data = await response.json();
 
                 if (data) {
