@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>LIFF Form</title>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+</head>
+<body>
+    <h1>LIFF Form</h1>
+    <form id="myForm">
+        <label for="user_id">User ID:</label>
+        <input type="text" id="user_id" name="user_id" required><br><br>
+        <label for="message">Message:</label>
+        <input type="text" id="message" name="message" required><br><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        // LIFF SDKの初期化
+        async function initializeLiff() {
+            try {
+                await liff.init({ liffId: '1661534670-5z7bz7o4' });  // ご自身のLIFF IDに置き換えてください
+                displayLiffData();
+            } catch (error) {
+                console.error('LIFF initialization failed', error);
+            }
+        }
+        initializeLiff();
+
+        // フォームの送信イベントのハンドラ
+        document.getElementById('myForm').addEventListener('submit', submitForm);
+
+        // スプレッドシートのデータを取得し、フォームに表示
+        async function displayLiffData() {
+            try {
+                const profile = await liff.getProfile();
+                const userId = profile.userId;
+                const response = await fetch('hhttps://script.google.com/macros/s/AKfycbzjjENYn2gRE0l6-a21urIT_xC3w7Fm1LJlUnVq7G9xZLoCWNXjaqq7AjW6cqfwabHz/exec?user_id=' + userId);  // ご自身のGAS WebアプリのURLに置き換えてください
+                const data = await response.json();
+
+                if (data) {
+                    document.getElementById('user_id').value = data.user_id;
+                    document.getElementById('message').value = data.message;
+                }
+            } catch (error) {
+                console.error('Failed to fetch data from spreadsheet', error);
+            }
+        }
+
+        // フォームのデータをLINE Botに送信
+        function submitForm(event) {
+            event.preventDefault();  // デフォルトのフォーム送信をキャンセル
+
+            var userId = document.getElementById('user_id').value;
+            var message = document.getElementById('message').value;
+
+            liff.sendMessages([
+                {
+                    type: 'text',
+                    text: 'User ID: ' + userId + '\nMessage: ' + message
+                }
+            ]).then(() => {
+                // 送信成功時にデータをリセット
+                document.getElementById('myForm').reset();
+            }).catch((error) => {
+                console.error('Failed to send message', error);
+            });
+        }
+    </script>
+</body>
+</html>
